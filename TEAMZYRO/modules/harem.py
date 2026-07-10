@@ -39,10 +39,10 @@ async def check_support_channel(client: Client, user_id: int) -> bool:
 async def fetch_user_characters(user_id):
     user = await user_collection.find_one({"id": user_id})
     if not user or 'characters' not in user:
-        return None, 'You have not guessed any characters yet.'
+        return None, '🦋 <i>Ara ara~ You have not collected any souls in your Butterfly Garden yet! Use commands like /guess to subdue them.</i>'
     characters = [c for c in user['characters'] if 'id' in c]
     if not characters:
-        return None, 'No valid characters found in your collection.'
+        return None, '🦋 <i>Ara ara? I could not find any valid records inside your personal Corps Ledger.</i>'
     return characters, None
 
 @app.on_message(filters.command(["harem", "collection"]))
@@ -51,11 +51,13 @@ async def harem_handler(client: Client, message: Message):
 
     # Check if the user is in the support channel
     if not await check_support_channel(client, user_id):
-        keyboard = [[InlineKeyboardButton("Join Support Channel", url=f"https://t.me/{SUPPORT_CHANNEL.lstrip('@')}")]]
+        keyboard = [[InlineKeyboardButton("🦋 Join Wisteria Domain", url=f"https://t.me/{SUPPORT_CHANNEL.lstrip('@')}")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
         await message.reply_text(
-            f"Please join our support channel {SUPPORT_CHANNEL} to use this command!",
-            reply_markup=reply_markup
+            f"🦋 <b>𝖶𝖨𝖲𝖳𝖤𝖱𝖨𝖠 𝖡𝖠𝖱𝖱𝖨𝖤𝖱</b>\n\n"
+            f"<blockquote>Ara ara~ To access your collection records, you must first pass through our support channel {SUPPORT_CHANNEL}! Please join below.</blockquote>",
+            reply_markup=reply_markup,
+            parse_mode=enums.ParseMode.HTML
         )
         return
 
@@ -76,20 +78,22 @@ async def display_harem(client, message, user_id, page, filter_rarity, is_initia
     try:
         # Check support channel membership again for callback queries
         if not is_initial and not await check_support_channel(client, user_id):
-            keyboard = [[InlineKeyboardButton("Join Support Channel", url=f"https://t.me/{SUPPORT_CHANNEL.lstrip('@')}")]]
+            keyboard = [[InlineKeyboardButton("🦋 Join Wisteria Domain", url=f"https://t.me/{SUPPORT_CHANNEL.lstrip('@')}")]]
             reply_markup = InlineKeyboardMarkup(keyboard)
             await callback_query.message.edit_text(
-                f"Please join our support channel {SUPPORT_CHANNEL} to view your harem!",
-                reply_markup=reply_markup
+                f"🦋 <b>𝖶𝖨𝖲𝖳𝖤𝖱𝖨𝖠 𝖡𝖠𝖱𝖱𝖨𝖤𝖱</b>\n\n"
+                f"<blockquote>Your security seal expired~ Please join our support channel {SUPPORT_CHANNEL} to inspect your garden!</blockquote>",
+                reply_markup=reply_markup,
+                parse_mode=enums.ParseMode.HTML
             )
             return
 
         characters, error = await fetch_user_characters(user_id)
         if error:
             if is_initial:
-                await message.reply_text(error)
+                await message.reply_text(error, parse_mode=enums.ParseMode.HTML)
             else:
-                await callback_query.message.edit_text(error)
+                await callback_query.message.edit_text(error, parse_mode=enums.ParseMode.HTML)
             return
 
         # Calculate total and AMV character counts
@@ -104,19 +108,17 @@ async def display_harem(client, message, user_id, page, filter_rarity, is_initia
             filtered_characters = [c for c in characters if c.get('rarity') == filter_rarity]
             if not filtered_characters:
                 keyboard = [
-                    [InlineKeyboardButton("Remove Filter", callback_data=f"remove_filter:{user_id}")]
+                    [InlineKeyboardButton("🦋 Remove Rarity Filter", callback_data=f"remove_filter:{user_id}")]
                 ]
                 reply_markup = InlineKeyboardMarkup(keyboard)
+                no_rarity_text = (
+                    f"🦋 <b>𝖦𝖠𝖱𝖣𝖤𝖭 𝖨𝖭𝖲𝖯𝖤𝖢𝖳𝖨𝖮𝖭</b>\n\n"
+                    f"<blockquote>Ara ara! No souls under the status <b>{filter_rarity}</b> have been resting in your garden. Use the action button below to drop the partition.</blockquote>"
+                )
                 if is_initial:
-                    await message.reply_text(
-                        f"No characters found with rarity: **{filter_rarity}**. Click below to remove the filter.",
-                        reply_markup=reply_markup
-                    )
+                    await message.reply_text(no_rarity_text, reply_markup=reply_markup, parse_mode=enums.ParseMode.HTML)
                 else:
-                    await callback_query.message.edit_text(
-                        f"No characters found with rarity: **{filter_rarity}**. Click below to remove the filter.",
-                        reply_markup=reply_markup
-                    )
+                    await callback_query.message.edit_text(no_rarity_text, reply_markup=reply_markup, parse_mode=enums.ParseMode.HTML)
                 return
             characters = filtered_characters
 
@@ -134,9 +136,9 @@ async def display_harem(client, message, user_id, page, filter_rarity, is_initia
         user_first_name = user_db.get("first_name", "User") if user_db else "User"
 
         # Build harem message
-        harem_message = f"🌸 <b>{escape(user_first_name)}'s 𝖧𝖠𝖱𝖤𝖬</b> (𝖯𝖺𝗀𝖾 {page+1}/{total_pages})\n\n"
+        harem_message = f"🦋 <b>{escape(user_first_name)}'𝗌 𝖡𝖴𝖳𝖳𝖤𝖱𝖥𝖫𝖸 𝖦𝖠𝖱𝖣𝖤𝖭</b> 🌸 (𝖯𝖺𝗀𝖾 {page+1}/{total_pages})\n\n"
         if filter_rarity:
-            harem_message += f"<blockquote>🎯 <b>𝖥𝗂𝗅𝗍𝖾𝗋𝖾𝖽 𝖻𝗒:</b> {filter_rarity}</blockquote>\n"
+            harem_message += f"<blockquote>🎯 <b>𝖨𝖭𝖲𝖯𝖤𝖢𝖳𝖨𝖭𝖦 𝖱𝖠𝖱𝖨𝖳𝖸:</b> {filter_rarity}</blockquote>\n"
 
         harem_message += "<blockquote>"
         # Get characters for the current page
@@ -146,27 +148,27 @@ async def display_harem(client, message, user_id, page, filter_rarity, is_initia
         # Add character details to the message
         for anime, chars in current_grouped_characters.items():
             total_anime_chars = await collection.count_documents({"anime": anime})
-            harem_message += f'\n⛩️ <b>{anime}</b> ({len(chars)}/{total_anime_chars})\n'
+            harem_message += f'\n🔮 <b>{anime}</b> ({len(chars)}/{total_anime_chars})\n'
             for character in chars:
                 count = character_counts[character['id']]
                 rarity_emoji = rarity_map2.get(character.get('rarity'), '')
-                harem_message += f'  ◈⌠{rarity_emoji}⌡ <code>{character["id"]}</code> {character["name"]} <b>(x{count})</b>\n'
+                harem_message += f'  ◈⌠{rarity_emoji}⌡ <code>{character["id"]}</code> {character["name"]} <b>(𝗑{count})</b>\n'
         harem_message += "</blockquote>"
 
         # Add inline buttons for collection and video-only collection with counts
         keyboard = [
             [
-                InlineKeyboardButton(f"Collection ({total_characters})", switch_inline_query_current_chat=f"collection.{user_id}"),
-                InlineKeyboardButton(f"💌 AMV ({amv_characters})", switch_inline_query_current_chat=f"collection.{user_id}.AMV")
+                InlineKeyboardButton(f"🦋 Garden ({total_characters})", switch_inline_query_current_chat=f"collection.{user_id}"),
+                InlineKeyboardButton(f"🧪 Insect AMV ({amv_characters})", switch_inline_query_current_chat=f"collection.{user_id}.AMV")
             ]
         ]
 
         if total_pages > 1:
             nav_buttons = []
             if page > 0:
-                nav_buttons.append(InlineKeyboardButton("⬅️", callback_data=f"harem:{page-1}:{user_id}:{filter_rarity or 'None'}"))
+                nav_buttons.append(InlineKeyboardButton("🦋 ⬅️", callback_data=f"harem:{page-1}:{user_id}:{filter_rarity or 'None'}"))
             if page < total_pages - 1:
-                nav_buttons.append(InlineKeyboardButton("➡️", callback_data=f"harem:{page+1}:{user_id}:{filter_rarity or 'None'}"))
+                nav_buttons.append(InlineKeyboardButton("➡️ 🦋", callback_data=f"harem:{page+1}:{user_id}:{filter_rarity or 'None'}"))
             keyboard.append(nav_buttons)
 
         reply_markup = InlineKeyboardMarkup(keyboard)
@@ -221,11 +223,11 @@ async def display_harem(client, message, user_id, page, filter_rarity, is_initia
 
     except Exception as e:
         print(f"Error in display_harem: {e}")
-        error_msg = "An error occurred. Please try again later."
+        error_msg = "🦋 <i>Ara ara~ The butterflies encountered a brief storm. Please refresh your canvas.</i>"
         if is_initial:
-            await message.reply_text(error_msg)
+            await message.reply_text(error_msg, parse_mode=enums.ParseMode.HTML)
         else:
-            await callback_query.message.edit_text(error_msg)
+            await callback_query.message.edit_text(error_msg, parse_mode=enums.ParseMode.HTML)
 
 @app.on_callback_query(filters.regex(r"^remove_filter"))
 async def remove_filter_callback(client: Client, callback_query: CallbackQuery):
@@ -234,16 +236,18 @@ async def remove_filter_callback(client: Client, callback_query: CallbackQuery):
         user_id = int(user_id)
 
         if callback_query.from_user.id != user_id:
-            await callback_query.answer("It's not your Harem!", show_alert=True)
+            await callback_query.answer("🦋 This isn't your Butterfly Garden to touch~", show_alert=True)
             return
 
         # Check support channel membership
         if not await check_support_channel(client, user_id):
-            keyboard = [[InlineKeyboardButton("Join Support Channel", url=f"https://t.me/{SUPPORT_CHANNEL.lstrip('@')}")]]
+            keyboard = [[InlineKeyboardButton("🦋 Join Wisteria Domain", url=f"https://t.me/{SUPPORT_CHANNEL.lstrip('@')}")]]
             reply_markup = InlineKeyboardMarkup(keyboard)
             await callback_query.message.edit_text(
-                f"Please join our support channel {SUPPORT_CHANNEL} to use this feature!",
-                reply_markup=reply_markup
+                f"🦋 <b>𝖶𝖨𝖲𝖳𝖤𝖱𝖨𝖠 𝖡𝖠𝖱𝖱𝖨𝖤𝖱</b>\n\n"
+                f"<blockquote>Please join our support channel {SUPPORT_CHANNEL} to manage your filters!</blockquote>",
+                reply_markup=reply_markup,
+                parse_mode=enums.ParseMode.HTML
             )
             return
 
@@ -254,7 +258,7 @@ async def remove_filter_callback(client: Client, callback_query: CallbackQuery):
         await callback_query.message.delete()
 
         # Notify the user that the filter has been removed
-        await callback_query.answer("Filter removed. Showing all rarities.", show_alert=True)
+        await callback_query.answer("🦋 Filter removed seamlessly. Showing all target rarities!", show_alert=True)
     except Exception as e:
         print(f"Error in remove_filter callback: {e}")
 
@@ -268,7 +272,7 @@ async def harem_callback(client: Client, callback_query: CallbackQuery):
         filter_rarity = None if filter_rarity == 'None' else filter_rarity
 
         if callback_query.from_user.id != user_id:
-            await callback_query.answer("It's not your Harem!", show_alert=True)
+            await callback_query.answer("🦋 This isn't your Butterfly Garden to flip through~", show_alert=True)
             return
 
         await display_harem(client, callback_query.message, user_id, page, filter_rarity, is_initial=False, callback_query=callback_query)
@@ -281,27 +285,34 @@ async def hmode_handler(client: Client, message: Message):
 
     # Check support channel membership
     if not await check_support_channel(client, user_id):
-        keyboard = [[InlineKeyboardButton("Join Support Channel", url=f"https://t.me/{SUPPORT_CHANNEL.lstrip('@')}")]]
+        keyboard = [[InlineKeyboardButton("🦋 Join Wisteria Domain", url=f"https://t.me/{SUPPORT_CHANNEL.lstrip('@')}")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
         await message.reply_text(
-            f"Please join our support channel {SUPPORT_CHANNEL} to use this command!",
-            reply_markup=reply_markup
+            f"🦋 <b>𝖶𝖨𝖲𝖳𝖤𝖱𝖨𝖠 𝖡𝖠𝖱𝖱𝖨𝖤𝖱</b>\n\n"
+            f"<blockquote>Please join our support channel {SUPPORT_CHANNEL} to use this configurations tool!</blockquote>",
+            reply_markup=reply_markup,
+            parse_mode=enums.ParseMode.HTML
         )
         return
 
     keyboard = []
     row = []
     for i, (rarity, emoji) in enumerate(rarity_map2.items(), 1):
-        row.append(InlineKeyboardButton(emoji, callback_data=f"set_rarity:{user_id}:{rarity}"))
-        if i % 4 == 0:
+        row.append(InlineKeyboardButton(f"{emoji} {rarity}", callback_data=f"set_rarity:{user_id}:{rarity}"))
+        if i % 2 == 0:  # Spaced layout for clean readability
             keyboard.append(row)
             row = []
     if row:
         keyboard.append(row)
-    keyboard.append([InlineKeyboardButton("All", callback_data=f"set_rarity:{user_id}:None")])
+    keyboard.append([InlineKeyboardButton("🦋 Show All Rarities", callback_data=f"set_rarity:{user_id}:None")])
 
     reply_markup = InlineKeyboardMarkup(keyboard)
-    await message.reply_text("Select a rarity to filter your harem:", reply_markup=reply_markup)
+    await message.reply_text(
+        "🦋 <b>𝖦𝖠𝖱𝖣𝖤𝖭 𝖥𝖨𝖫𝖳𝖤𝖱 𝖢𝖮𝖭𝖥𝖨𝖦</b> 🧪\n\n"
+        "<blockquote>Select a target rarity class to restructure how your Corps Ledger displays:</blockquote>", 
+        reply_markup=reply_markup,
+        parse_mode=enums.ParseMode.HTML
+    )
 
 @app.on_callback_query(filters.regex(r"^set_rarity"))
 async def set_rarity_callback(client: Client, callback_query: CallbackQuery):
@@ -311,16 +322,18 @@ async def set_rarity_callback(client: Client, callback_query: CallbackQuery):
         filter_rarity = None if filter_rarity == 'None' else filter_rarity
 
         if callback_query.from_user.id != user_id:
-            await callback_query.answer("It's not your Harem!", show_alert=True)
+            await callback_query.answer("🦋 This configuration setup belongs to another Slayer~", show_alert=True)
             return
 
         # Check support channel membership
         if not await check_support_channel(client, user_id):
-            keyboard = [[InlineKeyboardButton("Join Support Channel", url=f"https://t.me/{SUPPORT_CHANNEL.lstrip('@')}")]]
+            keyboard = [[InlineKeyboardButton("🦋 Join Wisteria Domain", url=f"https://t.me/{SUPPORT_CHANNEL.lstrip('@')}")]]
             reply_markup = InlineKeyboardMarkup(keyboard)
             await callback_query.message.edit_text(
-                f"Please join our support channel {SUPPORT_CHANNEL} to use this feature!",
-                reply_markup=reply_markup
+                f"🦋 <b>𝖶𝖨𝖲𝖳𝖤𝖱𝖨𝖠 𝖡𝖠𝖱𝖱𝖨𝖤𝖱</b>\n\n"
+                f"<blockquote>Please join our support channel {SUPPORT_CHANNEL} to confirm these changes!</blockquote>",
+                reply_markup=reply_markup,
+                parse_mode=enums.ParseMode.HTML
             )
             return
 
@@ -329,10 +342,18 @@ async def set_rarity_callback(client: Client, callback_query: CallbackQuery):
 
         # Edit the message to show which rarity is set and remove the buttons
         if filter_rarity:
-            await callback_query.message.edit_text(f"Rarity filter set to: **{filter_rarity}**")
+            await callback_query.message.edit_text(
+                f"🦋 <b>𝖥𝖨𝖫𝖳𝖤𝖱 𝖠𝖯𝖯𝖫𝖨𝖤𝖭</b> 🧪\n\n"
+                f"<blockquote>Your garden lens is now adjusted exclusively to: <b>{filter_rarity}</b>. All other ranks will remain veiled until cleared.</blockquote>",
+                parse_mode=enums.ParseMode.HTML
+            )
         else:
-            await callback_query.message.edit_text("Rarity filter cleared. Showing all rarities.")
+            await callback_query.message.edit_text(
+                "🦋 <b>𝖥𝖨𝖫𝖳𝖤𝖱 𝖢𝖫𝖤𝖠𝖱𝖤𝖭</b> ✨\n\n"
+                "<blockquote>The garden partition has been lifted! Your ledger will now reveal every soul gathered across all rarities.</blockquote>",
+                parse_mode=enums.ParseMode.HTML
+            )
 
-        await callback_query.answer(f"Rarity filter set to {filter_rarity if filter_rarity else 'All'}", show_alert=True)
+        await callback_query.answer(f"🦋 Garden filter updated to: {filter_rarity if filter_rarity else 'All'}", show_alert=True)
     except Exception as e:
         print(f"Error in set_rarity callback: {e}")
