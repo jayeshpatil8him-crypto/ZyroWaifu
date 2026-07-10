@@ -40,13 +40,13 @@ IMGBB_API_KEY = os.getenv("IMGBB_API_KEY", "")
 
 # Media Configurations
 START_MEDIA = [
-    os.getenv("START_MEDIA_1", "https://files.catbox.moe/zufhkk.mp4"),
-    os.getenv("START_MEDIA_2", "https://files.catbox.moe/zufhkk.mp4")
+    os.getenv("START_MEDIA_1", "https://files.catbox.moe/5zrb1a.mp4"),
+    os.getenv("START_MEDIA_1","https://files.catbox.moe/5zrb1a.mp4")
 ]
 
 PHOTO_URL = [
-    os.getenv("PHOTO_URL_1", "https://files.catbox.moe/7ccoub.jpg"),
-    os.getenv("PHOTO_URL_2", "https://files.catbox.moe/7ccoub.jpg")
+    os.getenv("PHOTO_URL_1", "https://i.ibb.co/v6H9qNn7/file-0000000099dc71f5a902afba055b1567.png"),
+    os.getenv("PHOTO_URL_2", "https://i.ibb.co/v6H9qNn7/file-0000000099dc71f5a902afba055b1567.png")
 ]
 
 STATS_IMG = [
