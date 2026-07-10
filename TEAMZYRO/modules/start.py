@@ -24,7 +24,7 @@ def get_uptime():
 
 # START_MEDIA is imported from TEAMZYRO package
 
-# 🔹 Function to Generate Private Start Message & Buttons
+# 🔹 Function to Generate Private Start Message & Buttons (Shinobu Custom Design)
 async def generate_start_message(client, message):
     bot_user = await client.get_me()
     bot_name = bot_user.first_name
@@ -32,37 +32,38 @@ async def generate_start_message(client, message):
     uptime = get_uptime()
     
     caption = (
-        f"🍃 𝖦𝗋𝖾𝖾𝗍𝗂𝗇𝗀𝗌, 𝖨'𝗆 <b>{bot_name}</b> 🫧\n\n"
+        f"🦋 <b>Ara ara~ Welcome to the Butterfly Mansion!</b> 🌸\n\n"
+        f"<i>I am {bot_name}. It seems you've wandered straight into my laboratory. Don't worry, the fresh wisteria fragrance will keep you safe from any nasty demons here.</i>\n\n"
         f"<blockquote>━━━━━━━▧▣▧━━━━━━━\n"
-        f"⦾ <b>𝖶𝖧𝖤𝖱𝖤:</b> 𝖨 𝗌𝗉𝖺𝗐𝗇 𝗐𝖺𝗂𝖿𝗎𝗌 𝗂𝗇 𝗒𝗈𝗎𝗋 𝖼𝗁𝖺𝗍 𝖿𝗈𝗋 𝗎𝗌𝖾𝗋𝗌 𝗍𝗈 𝗀𝗋𝖺𝖻.\n"
-        f"⦾ <b>𝖧𝖮𝖶 𝖳𝖮 𝖴𝖲𝖤:</b> 𝖠𝖽𝖽 𝗆𝖾 𝗍𝗈 𝗒𝗈𝗎𝗋 𝗀𝗋𝗈𝗎𝗉 𝖺𝗇𝖽 𝗎𝗌𝖾 /help 𝖿𝗈𝗋 𝖼𝗈𝗆𝗆𝖺𝗇𝖽𝗌.\n"
+        f"⦾ <b>MISSION:</b> I track down roaming Slayers and trap wandering Demons in your chats.\n"
+        f"⦾ <b>TRAINING:</b> Add me to your group and use /help to read my custom training manuals.\n"
         f"━━━━━━━▧▣▧━━━━━━━\n"
-        f"⚡ <b>𝖯𝖨𝖭𝖦:</b> {ping} ms\n"
-        f"⏳ <b>𝖴𝖯𝖳𝖨𝖬𝖤:</b> {uptime}</blockquote>"
+        f"⚡ <b>PULSE:</b> {ping} ms\n"
+        f"⏳ <b>REST ZONE:</b> {uptime}</blockquote>"
     )
 
     buttons = [
-        [InlineKeyboardButton("Aᴅᴅ Tᴏ Yᴏᴜʀ Gʀᴏᴜᴘ ", url=f"https://t.me/{bot_user.username}?startgroup=true")],
-        [InlineKeyboardButton("Sᴜᴘᴘᴏʀᴛ", url=SUPPORT_CHAT), 
-         InlineKeyboardButton("Cʜᴀɴɴᴇʟ", url=UPDATE_CHAT)],
-        [InlineKeyboardButton("Hᴇʟᴘ", callback_data="open_help")],
+        [InlineKeyboardButton("🦋 Deploy To Your Squad ", url=f"https://t.me/{bot_user.username}?startgroup=true")],
+        [InlineKeyboardButton("💜 Support Mansion", url=SUPPORT_CHAT), 
+         InlineKeyboardButton("📢 Laboratory", url=UPDATE_CHAT)],
+        [InlineKeyboardButton("🧪 Training Manual", callback_data="open_help")],
         [InlineKeyboardButton("Owner", url=f"https://t.me/xeno_kakarot")],
     ]
     
     return caption, buttons
 
-# 🔹 Function to Generate Group Start Message & Buttons
+# 🔹 Function to Generate Group Start Message & Buttons (Shinobu Custom Design)
 async def generate_group_start_message(client):
     bot_user = await client.get_me()
     caption = (
-        f"🍃 𝖨'𝗆 <b>{bot_user.first_name}</b> 🫧\n\n"
-        f"<blockquote>𝖨 𝗌𝗉𝖺𝗐𝗇 𝗐𝖺𝗂𝖿𝗎𝗌 𝗂𝗇 𝗒𝗈𝗎𝗋 𝗀𝗋𝗈𝗎𝗉 𝗐𝗂𝗍𝗁 𝗆𝖾𝗌𝗌𝖺𝗀𝖾 𝖼𝗈𝗎𝗇𝗍𝗌 𝖿𝗈𝗋 𝗉𝗅𝖺𝗒𝖾𝗋𝗌 𝗍𝗈 /guess.\n"
-        f"𝖴𝗌𝖾 /help 𝖿𝗈ʀ ᴍᴏʀᴇ ɪɴғᴏ.</blockquote>"
+        f"🦋 <i>Flap, flap... I am</i> <b>{bot_user.first_name}</b> 🌸\n\n"
+        f"<blockquote>I am currently monitoring this chat area to detect and expose hidden demons through message flows.\n\n"
+        f"Use /help to access my specialized medical and combat manuals!</i></blockquote>"
     )
     buttons = [
         [
-            InlineKeyboardButton("Aᴅᴅ Mᴇ", url=f"https://t.me/{bot_user.username}?startgroup=true"),
-            InlineKeyboardButton("Sᴜᴘᴘᴏʀᴛ", url=SUPPORT_CHAT)
+            InlineKeyboardButton("🦋 Summon Me", url=f"https://t.me/{bot_user.username}?startgroup=true"),
+            InlineKeyboardButton("💜 Support", url=SUPPORT_CHAT)
         ]
     ]
     return caption, buttons
@@ -116,17 +117,17 @@ def find_help_modules():
         buttons.append(InlineKeyboardButton(button_name, callback_data=f"help_{module_name}"))
     return [buttons[i : i + 3] for i in range(0, len(buttons), 3)]
 
-# 🔹 Help Button Click Handler
+# 🔹 Help Button Click Handler (Shinobu Custom Design)
 @app.on_callback_query(filters.regex("^open_help$"))
 async def show_help_menu(client, query: CallbackQuery):
     time.sleep(1)
     buttons = find_help_modules()
-    buttons.append([InlineKeyboardButton("⬅ Back", callback_data="back_to_home")])
+    buttons.append([InlineKeyboardButton("⬅️ Return to Mansion", callback_data="back_to_home")])
 
     text = (
-        "⚙️ <b>𝖧𝖤𝖫𝖯 𝖬𝖤𝖭𝖴</b>\n\n"
-        "<blockquote>ᴄʜᴏᴏsᴇ ᴛʜᴇ ᴄᴀᴛᴇɢᴏʀʏ ғᴏʀ ᴡʜɪᴄʜ ʏᴏᴜ ᴡᴀɴɴᴀ ɢᴇᴛ ʜᴇʟᴩ.\n\n"
-        "ᴀʟʟ ᴄᴏᴍᴍᴀɴᴅs ᴄᴀɴ ʙᴇ ᴜsᴇᴅ ᴡɪᴛʜ : /</blockquote>"
+        "⚙️ <b>🦋 BUTTERFLY MANSION HELP MENU</b>\n\n"
+        "<blockquote>Select a target directory below to read our execution manuals and treatment guides.\n\n"
+        "All commands inside must be deployed using the prefix symbol: /</blockquote>"
     )
 
     try:
@@ -150,9 +151,9 @@ async def show_help(client, query: CallbackQuery):
     try:
         module_data = HELP_DATA.get(module_name, {})
         help_text = module_data.get("HELP", "Is module ka koi help nahi hai.")
-        buttons = [[InlineKeyboardButton("⬅ Back", callback_data="open_help")]]
+        buttons = [[InlineKeyboardButton("⬅️ Back to Laboratory", callback_data="open_help")]]
         
-        full_text = f"<b>{module_name.upper()} Help:</b>\n\n{help_text}"
+        full_text = f"🧪 <b>{module_name.upper()} Clinical Records:</b>\n\n{help_text}"
         
         try:
             await query.message.edit_caption(
@@ -167,7 +168,7 @@ async def show_help(client, query: CallbackQuery):
                 parse_mode=enums.ParseMode.HTML
             )
     except Exception as e:
-        await query.answer("Help load karne me error aayi!")
+        await query.answer("Antidote logs could not be loaded properly!")
 
 # 🔹 Back to Home
 @app.on_callback_query(filters.regex("^back_to_home$"))
